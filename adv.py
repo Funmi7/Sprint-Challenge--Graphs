@@ -79,15 +79,15 @@ def traverse_map(optimum_path, player, graph):
         fresh_room[direction] = "?"
     graph[world.starting_room.id] = fresh_room
 
-    moves_q = Queue()
+    q = Queue()
     total_moves = []
-    q_moves(player, moves_q)
+    q_moves(player, q)
 
     reverse_compass = {"n": "s", "s": "n", "e": "w", "w": "e"}
 
-    while moves_q.size() > 0:
+    while q.size() > 0:
         starting = player.current_room.id
-        next_dir = moves_q.dequeue()
+        next_dir = q.dequeue()
         player.travel(next_dir)
         total_moves.append(next_dir)
         end = player.current_room.id
@@ -97,8 +97,8 @@ def traverse_map(optimum_path, player, graph):
             for exits in player.current_room.get_exits():
                 graph[end][exits] = "?"
         graph[end][reverse_compass[next_dir]] = starting
-        if moves_q.size() == 0:
-            q_moves(player, moves_q)
+        if q.size() == 0:
+            q_moves(player, q)
    
     optimum_path = total_moves
     return optimum_path 
